@@ -14,7 +14,7 @@ CONSOANE_BUNE_LANGA_VOCALA = ["r", "n", "t", "l", "s", "c", "d", "p", "m"]
 DICTIONAR = []
 
 
-def incarca_dictionar(cale_dictionar="lexicon_ro.txt"):
+def incarca_dictionar(cale_dictionar):
     """Încarcă cuvintele din dicționar."""
     global DICTIONAR
     try:
@@ -194,16 +194,17 @@ def rezolva_un_joc(model_initial, cuvant_corect):
 
 
 def main():
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 4:
         print("Utilizare: python rezolvator_spanzuratoarea.py intrare.csv iesire.csv")
         sys.exit(1)
 
     # Încarcă dicționarul la început
-    incarca_dictionar()
 
-    cale_intrare, cale_iesire = sys.argv[1], sys.argv[2]
+    cale_intrare, cale_iesire, cale_lexicon = sys.argv[1], sys.argv[2], sys.argv[3]
     randuri_iesire = []
     erori = []
+
+    incarca_dictionar(cale_lexicon)
 
     with open(cale_intrare, "r", encoding="utf-8", newline="") as fisier_intrare:
         cititor = csv.reader(fisier_intrare)
