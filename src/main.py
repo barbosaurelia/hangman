@@ -15,7 +15,7 @@ DICTIONAR = []
 
 
 def incarca_dictionar(cale_dictionar):
-    """Încarcă cuvintele din dicționar."""
+    """Încarca cuvintele din dictionar."""
     global DICTIONAR
     try:
         with open(cale_dictionar, "r", encoding="utf-8") as f:
@@ -31,7 +31,7 @@ def normalizare(text: str) -> str:
 
 
 def potriveste_pattern(cuvant, pattern):
-    """Verifică dacă un cuvânt se potrivește cu pattern-ul (* = orice literă)."""
+    """Verifica daca un cuvant se potriveste cu pattern-ul (* = orice litera)."""
     if len(cuvant) != len(pattern):
         return False
     for c, p in zip(cuvant, pattern):
@@ -41,12 +41,12 @@ def potriveste_pattern(cuvant, pattern):
 
 
 def filtreaza_candidati(pattern, litere_incercate):
-    """Returnează cuvintele din dicționar care se potrivesc cu pattern-ul și nu conțin litere greșite."""
+    """Returneaza cuvintele din dictionar care se potrivesc cu pattern-ul și nu contin litere greșite."""
     candidati = []
     for cuvant in DICTIONAR:
         if not potriveste_pattern(cuvant, pattern):
             continue
-        # Exclude cuvintele care conțin litere deja încercate greșit
+        # Exclude cuvintele care conțin litere deja încercate gresit
         litere_gresite = litere_incercate - set(pattern)
         if any(l in cuvant for l in litere_gresite):
             continue
@@ -55,11 +55,11 @@ def filtreaza_candidati(pattern, litere_incercate):
 
 
 def alege_litera_din_candidati(candidati, litere_incercate):
-    """Alege cea mai frecventă literă din candidații posibili."""
+    """Alege cea mai frecventa litera din candidatii posibili."""
     if not candidati:
         return None
 
-    # Numără frecvența literelor în pozițiile necunoscute
+    # Numara frecventa literelor în pozitiile necunoscute
     litere_disponibile = []
     for cuvant in candidati:
         for litera in cuvant:
@@ -69,7 +69,7 @@ def alege_litera_din_candidati(candidati, litere_incercate):
     if not litere_disponibile:
         return None
 
-    # Returnează cea mai frecventă literă
+    # Returneaza cea mai frecventa litera
     freq = Counter(litere_disponibile)
     return freq.most_common(1)[0][0]
 
@@ -104,7 +104,7 @@ def are_repetitii_model(model: str) -> bool:
 
 
 def exista_stea_langa_vocala(model: str) -> bool:
-    # True dacă există o stea adiacentă unei vocale cunoscute
+    # True daca exista o stea adiacenta unei vocale cunoscute
     n = len(model)
     for i, ch in enumerate(model):
         if ch == '*':
@@ -114,7 +114,7 @@ def exista_stea_langa_vocala(model: str) -> bool:
 
 
 def exista_stea_langa_consoana(model: str) -> bool:
-    # True dacă există o stea adiacentă unei consoane cunoscute
+    # True daca exista o stea adiacenta unei consoane cunoscute
     n = len(model)
     for i, ch in enumerate(model):
         if ch == '*':
@@ -124,9 +124,9 @@ def exista_stea_langa_consoana(model: str) -> bool:
 
 
 def ordine_dinamica(model: str, litere_incercate: set) -> list:
-    """Generează o ordine de ghicire adaptată la model, CU dicționar."""
+    """Genereaza o ordine de ghicire adaptata la model, CU dicționar."""
 
-    # Încercăm mai întâi cu dicționarul
+    # Incercam mai intai cu dicționarul
     if DICTIONAR:
         candidati = filtreaza_candidati(model, litere_incercate)
         if candidati:
@@ -134,7 +134,7 @@ def ordine_dinamica(model: str, litere_incercate: set) -> list:
             if litera_aleasa:
                 return [litera_aleasa]
 
-    # Fallback: metoda de bază (fără dicționar)
+    # Fallback: metoda de baza (fără dicționar)
     baza_vocale = [l for l in VOCALE if l not in litere_incercate]
     baza_consoane = [l for l in CONSOANE if l not in litere_incercate]
 
@@ -182,7 +182,7 @@ def rezolva_un_joc(model_initial, cuvant_corect):
         if not ordinea:
             break
 
-        litera = ordinea[0]  # luăm prima literă recomandată
+        litera = ordinea[0]  # luam prima litera recomandata
         litere_incercate.add(litera)
         incercari.append(litera)
 
@@ -198,7 +198,7 @@ def main():
         print("Utilizare: python rezolvator_spanzuratoarea.py intrare.csv iesire.csv")
         sys.exit(1)
 
-    # Încarcă dicționarul la început
+    # Încarca dictionarul la început
 
     cale_intrare, cale_iesire, cale_lexicon = sys.argv[1], sys.argv[2], sys.argv[3]
     randuri_iesire = []
@@ -242,13 +242,12 @@ def main():
         scriitor.writerow(["id_joc", "total_incercari", "cuvant_gasit", "stare", "secventa_incercari"])
         scriitor.writerows(randuri_iesire)
 
-    # statistici
+
     suma_incercari = sum(int(r[1]) for r in randuri_iesire)
     numar_jocuri = len(randuri_iesire)
     ok = sum(1 for r in randuri_iesire if r[3] == "OK")
     fail = sum(1 for r in randuri_iesire if r[3] == "FAIL")
 
-    print("\n--- Statistici generale ---")
     print(f"Număr total de jocuri: {numar_jocuri}")
     print(f"Rezolvate corect (OK): {ok}")
     print(f"Nerezolvate (FAIL): {fail}")
